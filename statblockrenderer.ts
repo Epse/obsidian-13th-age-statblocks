@@ -15,11 +15,12 @@ export class StatblockRenderer extends MarkdownRenderChild {
 		this.statblockEl.createEl("h1", { cls: "sc nomargin", text: this.params.name });
 
 		if (this.params.blurb) {
-			this.statblockEl.createDiv({ cls: "em", text: this.params.blurb });
+			this.statblockEl.createDiv({ cls: "em group", text: this.params.blurb });
 		}
 
+		const propertiesBlock = this.statblockEl.createDiv({cls: 'group'});
 		if (this.roleText !== undefined) {
-			const role = this.statblockEl.createDiv({ cls: "nomargin" });
+			const role = propertiesBlock.createDiv();
 			role.createSpan({ cls: "em", text: this.roleText });
 			if (this.params.tag) {
 				role.createSpan({ cls: "sc", text: ` [${this.params.tag}]` });
@@ -27,18 +28,17 @@ export class StatblockRenderer extends MarkdownRenderChild {
 		}
 
 		if (this.params.initiative !== undefined) {
-			this.statblockEl.createDiv({
-				text: `Initiative: ${bonus(this.params.initiative)}`,
-				cls: this.params.vuln ? "nomargin" : undefined,
+			propertiesBlock.createDiv({
+				text: `Initiative: ${bonus(this.params.initiative)}`
 			});
 		}
 		if (this.params.vuln !== undefined) {
-			this.statblockEl.createDiv({
+			propertiesBlock.createDiv({
 				text: `Vulnerability: ${this.params.vuln}`,
 			});
 		}
 		if (this.params.resist !== undefined) {
-			this.statblockEl.createDiv({
+			propertiesBlock.createDiv({
 				text: `Resistance: ${this.params.resist}`,
 			});
 		}
@@ -46,14 +46,16 @@ export class StatblockRenderer extends MarkdownRenderChild {
 		for (const attack of this.params.attacks || []) {
 			await this.renderAttack(attack);
 		}
+		const traitGroup = this.statblockEl.createDiv({cls: 'group'});
 		for (const trait of this.params.traits || []) {
-			await this.renderSimpleItem(trait);
+			await this.renderSimpleItem(trait, traitGroup);
 		}
 
 		if (this.params.specials?.length > 0) {
-			this.statblockEl.createEl("h2", { text: "Nastier Specials" });
+			const specialsGroup = this.statblockEl.createDiv({cls: 'group'});
+			specialsGroup.createEl("h2", { text: "Nastier Specials" });
 			for (const special of this.params.specials) {
-				await this.renderSimpleItem(special);
+				await this.renderSimpleItem(special, specialsGroup);
 			}
 		}
 
@@ -113,8 +115,8 @@ export class StatblockRenderer extends MarkdownRenderChild {
 		}
 	}
 
-	async renderSimpleItem(trait: any) {
-		const traitEl = this.statblockEl.createDiv();
+	async renderSimpleItem(trait: any, parent: HTMLElement = null) {
+		const traitEl = (parent ?? this.statblockEl).createDiv();
 		traitEl.createEl('h5', { cls: "em", text: `${trait.name}: ` });
 		const descriptionEl = traitEl.createSpan();
 		descriptionEl.classList.add("mdcontainer");

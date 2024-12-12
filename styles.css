@@ -4,12 +4,15 @@
 	padding: 10px;
 }
 
+.statblock-13a p {
+	margin-bottom: 0;
+}
 
 .statblock-13a .fl-r {
 	float: right;
 }
 
-.statblock-13a div {
+.statblock-13a .group {
 	margin-bottom: 20px;
 }
 .statblock-13a .nomargin {
@@ -25,11 +28,13 @@
 }
 
 /* Easy styling for spans */
+.statblock-13a .em {
+	font-variant: normal;
+	font-style: italic;
+	font-weight: normal;
+}
 .statblock-13a .bold {
 	font-weight: bold;
-}
-.statblock-13a .em {
-	font-style: italic;
 }
 .statblock-13a .sc {
 	font-variant: small-caps;
@@ -56,9 +61,12 @@
 	margin: 0;
 }
 
+.statblock-13a h2, .statblock-13a h5 {
+	margin-bottom: 0;
+}
+
 .statblock-13a h5 {
 	display: inline-block;
-	margin-bottom: 0;
 }
 
 .statblock-13a .mdcontainer p {
@@ -66,7 +74,6 @@
 }
 
 .statblock-13a h5 + .mdcontainer>p:first-child {
-	margin-top: 0;
 	display: inline;
 	margin-left: 1ch;
 }
