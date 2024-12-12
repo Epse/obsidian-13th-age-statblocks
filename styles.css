@@ -63,5 +63,5 @@
 
 .statblock-13a .trait-name + .mdcontainer>p:first-child {
 	display: inline;
-	margin-left: 0;
+	margin-left: 1ch;
 }
