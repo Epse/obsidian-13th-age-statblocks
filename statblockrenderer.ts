@@ -43,8 +43,9 @@ export class StatblockRenderer extends MarkdownRenderChild {
 			});
 		}
 
+		const attackGroup = this.statblockEl.createDiv({cls: 'group'});
 		for (const attack of this.params.attacks || []) {
-			await this.renderAttack(attack);
+			await this.renderAttack(attack, attackGroup);
 		}
 		const traitGroup = this.statblockEl.createDiv({cls: 'group'});
 		for (const trait of this.params.traits || []) {
@@ -90,8 +91,8 @@ export class StatblockRenderer extends MarkdownRenderChild {
 		);
 	}
 
-	async renderAttack(attack: any) {
-		const attackEl = this.statblockEl.createDiv({ cls: "attack" });
+	async renderAttack(attack: any, parent: HTMLElement = null) {
+		const attackEl = (parent ?? this.statblockEl).createDiv({ cls: "attack" });
 		if (attack.tag) {
 			attackEl.createSpan({ cls: "em", text: `[${attack.tag}] ` });
 		}
@@ -117,7 +118,7 @@ export class StatblockRenderer extends MarkdownRenderChild {
 
 	async renderSimpleItem(trait: any, parent: HTMLElement = null) {
 		const traitEl = (parent ?? this.statblockEl).createDiv();
-		traitEl.createEl('h5', { cls: "em", text: `${trait.name}: ` });
+		traitEl.createSpan({ cls: "em trait-name", text: `${trait.name}: ` });
 		const descriptionEl = traitEl.createSpan();
 		descriptionEl.classList.add("mdcontainer");
 		await MarkdownRenderer.renderMarkdown(trait.description, descriptionEl, "", this);

@@ -4,10 +4,6 @@
 	padding: 10px;
 }
 
-.statblock-13a p {
-	margin-bottom: 0;
-}
-
 .statblock-13a .fl-r {
 	float: right;
 }
@@ -61,19 +57,11 @@
 	margin: 0;
 }
 
-.statblock-13a h2, .statblock-13a h5 {
-	margin-bottom: 0;
-}
-
-.statblock-13a h5 {
-	display: inline-block;
-}
-
 .statblock-13a .mdcontainer p {
 	margin-left: 4ch;
 }
 
-.statblock-13a h5 + .mdcontainer>p:first-child {
+.statblock-13a .trait-name + .mdcontainer>p:first-child {
 	display: inline;
-	margin-left: 1ch;
+	margin-left: 0;
 }
