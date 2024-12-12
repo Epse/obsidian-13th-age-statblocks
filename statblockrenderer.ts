@@ -1,4 +1,4 @@
-import { MarkdownRenderChild } from "obsidian";
+import { MarkdownRenderChild, MarkdownRenderer } from "obsidian";
 
 export class StatblockRenderer extends MarkdownRenderChild {
 	statblockEl: HTMLDivElement;
@@ -7,54 +7,57 @@ export class StatblockRenderer extends MarkdownRenderChild {
 		super(containerEl);
 
 		this.statblockEl = this.containerEl.createDiv({ cls: "statblock-13a" });
+	}
 
-		this.statblockEl.createDiv({ cls: "fl-r em", text: params.source });
-		this.statblockEl.createEl("h1", { cls: "sc nomargin", text: params.name });
+	async render(): Promise<void> {
 
-		if (params.blurb) {
-			this.statblockEl.createDiv({ cls: "em", text: params.blurb });
+		this.statblockEl.createDiv({ cls: "fl-r em", text: this.params.source });
+		this.statblockEl.createEl("h1", { cls: "sc nomargin", text: this.params.name });
+
+		if (this.params.blurb) {
+			this.statblockEl.createDiv({ cls: "em", text: this.params.blurb });
 		}
 
 		if (this.roleText !== undefined) {
 			const role = this.statblockEl.createDiv({ cls: "nomargin" });
 			role.createSpan({ cls: "em", text: this.roleText });
-			if (params.tag) {
-				role.createSpan({ cls: "sc", text: ` [${params.tag}]` });
+			if (this.params.tag) {
+				role.createSpan({ cls: "sc", text: ` [${this.params.tag}]` });
 			}
 		}
 
-		if (params.initiative !== undefined) {
+		if (this.params.initiative !== undefined) {
 			this.statblockEl.createDiv({
-				text: `Initiative: ${bonus(params.initiative)}`,
-				cls: params.vuln ? "nomargin" : undefined,
+				text: `Initiative: ${bonus(this.params.initiative)}`,
+				cls: this.params.vuln ? "nomargin" : undefined,
 			});
 		}
-		if (params.vuln !== undefined) {
+		if (this.params.vuln !== undefined) {
 			this.statblockEl.createDiv({
-				text: `Vulnerability: ${params.vuln}`,
+				text: `Vulnerability: ${this.params.vuln}`,
 			});
 		}
 
-		for (const attack of params.attacks || []) {
-			this.renderAttack(attack);
+		for (const attack of this.params.attacks || []) {
+			await this.renderAttack(attack);
 		}
-		for (const trait of params.traits || []) {
-			this.renderSimpleItem(trait);
+		for (const trait of this.params.traits || []) {
+			await this.renderSimpleItem(trait);
 		}
 
-		if (params.specials?.length > 0) {
+		if (this.params.specials?.length > 0) {
 			this.statblockEl.createEl("h2", { text: "Nastier Specials" });
-			for (const special of params.specials) {
-				this.renderSimpleItem(special);
+			for (const special of this.params.specials) {
+				await this.renderSimpleItem(special);
 			}
 		}
 
 		const numbers = this.statblockEl.createDiv({ cls: "numbers" });
 		const defenses = numbers.createDiv();
-		defenses.createDiv({ cls: "bold", text: `AC ${params.ac}` });
-		defenses.createDiv({ text: `PD ${params.pd}` });
-		defenses.createDiv({ text: `MD ${params.md}` });
-		numbers.createDiv({ cls: "bold", text: `HP ${params.hp}` });
+		defenses.createDiv({ cls: "bold", text: `AC ${this.params.ac}` });
+		defenses.createDiv({ text: `PD ${this.params.pd}` });
+		defenses.createDiv({ text: `MD ${this.params.md}` });
+		numbers.createDiv({ cls: "bold", text: `HP ${this.params.hp}` });
 		numbers.createDiv("");
 	}
 
@@ -80,7 +83,7 @@ export class StatblockRenderer extends MarkdownRenderChild {
 		);
 	}
 
-	renderAttack(attack: any) {
+	async renderAttack(attack: any) {
 		const attackEl = this.statblockEl.createDiv({ cls: "attack" });
 		if (attack.tag) {
 			attackEl.createSpan({ cls: "em", text: `[${attack.tag}] ` });
@@ -98,15 +101,19 @@ export class StatblockRenderer extends MarkdownRenderChild {
 		for (const extra of attack.extras ?? []) {
 			const div = attackEl.createDiv();
 			div.createSpan({ cls: "em", text: `${extra.name}: ` });
-			div.createSpan({ text: extra.description });
+			const element = div.createSpan();
+			element.classList.add('inline-md')
+			// TODO source path should probably not be null
+			await MarkdownRenderer.renderMarkdown(extra.description, element, "", this);
 		}
 	}
 
-	renderSimpleItem(trait: any) {
+	async renderSimpleItem(trait: any) {
 		const traitEl = this.statblockEl.createDiv();
 		traitEl.createEl('h5', { cls: "em", text: `${trait.name}: ` });
-		const descriptionEl = traitEl.createDiv();
-		descriptionEl.innerHTML = trait.description;
+		const descriptionEl = traitEl.createSpan();
+		descriptionEl.classList.add("mdcontainer");
+		await MarkdownRenderer.renderMarkdown(trait.description, descriptionEl, "", this);
 	}
 }
 

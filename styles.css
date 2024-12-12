@@ -50,3 +50,23 @@
 	margin: 0 1em;
 	flex-grow: 1;
 }
+
+.statblock-13a .inline-md p {
+	display: inline-block;
+	margin: 0;
+}
+
+.statblock-13a h5 {
+	display: inline-block;
+	margin-bottom: 0;
+}
+
+.statblock-13a .mdcontainer p {
+	margin-left: 4ch;
+}
+
+.statblock-13a h5 + .mdcontainer>p:first-child {
+	margin-top: 0;
+	display: inline;
+	margin-left: 1ch;
+}

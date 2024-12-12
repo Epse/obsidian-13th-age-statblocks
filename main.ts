@@ -33,7 +33,10 @@ export default class ArchmagePlugin extends Plugin {
 			}
 		}
 
-		ctx.addChild(new StatblockRenderer(el, renderData));
+		const renderer = new StatblockRenderer(el, renderData);
+		await renderer.render();
+
+		ctx.addChild(renderer);
 	}
 
 	onunload() {}
