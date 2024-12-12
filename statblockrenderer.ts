@@ -37,6 +37,11 @@ export class StatblockRenderer extends MarkdownRenderChild {
 				text: `Vulnerability: ${this.params.vuln}`,
 			});
 		}
+		if (this.params.resist !== undefined) {
+			this.statblockEl.createDiv({
+				text: `Resistance: ${this.params.resist}`,
+			});
+		}
 
 		for (const attack of this.params.attacks || []) {
 			await this.renderAttack(attack);
