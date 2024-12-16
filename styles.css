@@ -52,16 +52,11 @@
 	flex-grow: 1;
 }
 
-.statblock-13a .inline-md p {
-	display: inline-block;
-	margin: 0;
+.statblock-13a .simple-item p {
+	padding-left: 4ch;
 }
 
-.statblock-13a .mdcontainer p {
-	margin-left: 4ch;
-}
-
-.statblock-13a .trait-name + .mdcontainer>p:first-child {
-	display: inline;
-	margin-left: 1ch;
+.statblock-13a .simple-item p:first-child {
+	padding-left: 4ch;
+	text-indent: -4ch;
 }

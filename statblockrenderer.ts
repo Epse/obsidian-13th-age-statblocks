@@ -105,23 +105,20 @@ export class StatblockRenderer extends MarkdownRenderChild {
 		];
 		attackEl.createSpan({ cls: "bold", text: titleParts.join(" ").trim() });
 		attackEl.createSpan({ text: ` — ${attack.hit}` });
+		const attackExtraContainer = attackEl.createDiv();
+
 
 		for (const extra of attack.extras ?? []) {
-			const div = attackEl.createDiv();
-			div.createSpan({ cls: "em", text: `${extra.name}: ` });
-			const element = div.createSpan();
-			element.classList.add('inline-md')
-			// TODO source path should probably not be null
-			await MarkdownRenderer.renderMarkdown(extra.description, element, "", this);
+			await this.renderSimpleItem(extra, attackExtraContainer);
 		}
 	}
 
 	async renderSimpleItem(trait: any, parent: HTMLElement = null) {
-		const traitEl = (parent ?? this.statblockEl).createDiv();
-		traitEl.createSpan({ cls: "em trait-name", text: `${trait.name}: ` });
-		const descriptionEl = traitEl.createSpan();
-		descriptionEl.classList.add("mdcontainer");
-		await MarkdownRenderer.renderMarkdown(trait.description, descriptionEl, "", this);
+		const el = (parent ?? this.statblockEl).createDiv();
+		el.classList.add("simple-item");
+		const text = `_${trait.name}:_ ${trait.description}`;
+		// TODO source path should probably not be null
+		await MarkdownRenderer.renderMarkdown(text, el, "", this);
 	}
 }
 
